@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+      circular-ring:not(:defined)::after{
+        display: block;
+        content: '';
+        width: 100px;
+        height: 100px;
+        background-color: #dddddd;
+      }
+      my-dialog{
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+        padding: 0 20px;
+        border: solid 1px #000000;
+        border-radius: 2px;
+        overflow: hidden;
+        display: none;
+      }
+      my-dialog[open='true']{
+        display: block;
+      }
+      .my-dialog__close{
+        position: absolute;
+        top: 0;
+        right: 5px;
+        border: none;
+        font-weight: bold;
+        font-size: 24px;
+        background: none;
+        color: red;
+        padding: 0;
+        cursor: pointer;
+        outline: none;
+      }
+      .my-dialog__close:focus{
+        outline: none;
+      }
+      .my-dialog__wrapper{
+        background-color: #ffffff;
+      }
+      .my-dialog__head{
+        white-space: nowrap;
+        text-align: center;
+      }
+      .my-dialog__content{
+        margin: 10px 0;
+      }
+      .btn{
+        height: 30px;
+        font-size: 14px;
+      }
+    </style>
+</head>
+<body>
+  <h3>自定义元素</h3>
+  <circular-ring radius='50' border-width='2' border-color='red' inner-color='yellow'></circular-ring>
+
+  <h3>扩展内置元素</h3>
+  <button is="my-button">Button</button>
+
+  <h3>My Dialog</h3>
+
+  <button class='btn' id='btn-open-dialog'>Open Dialog</button>
+  <button class='btn' id='btn-change-name'>Change Dialog Name</button>
+  <button class='btn' id='btn-remove-dialog'>Remove Dialog</button>
+
+  <script src="index.js"></script>
+  <script>
+    let $dialog = null;
+    const $btn_open_dialog = document.getElementById('btn-open-dialog');
+    const $btn_remove_dialog = document.getElementById('btn-remove-dialog');
+    const $btn_change_name = document.getElementById('btn-change-name');
+    $btn_open_dialog.addEventListener('click',ev=>{
+      if(!$dialog){
+        createDialog();
+      }
+      $dialog.open = true;
+    },false);
+    $btn_remove_dialog.addEventListener('click',ev=>{
+      $dialog.parentNode.removeChild($dialog);
+    },false);
+    $btn_change_name.addEventListener('click',ev=>{
+      $dialog.name = Math.random();
+    },false);
+
+    function createDialog(){
+      $dialog = document.createElement('my-dialog');
+      $dialog.setAttribute('title','My Dialog Title');
+      $dialog.setAttribute('content','My dialog content');
+      $dialog.setAttribute('name',Math.random());
+      document.body.appendChild($dialog);
+    }
+  </script>
+</body>
+</html>
