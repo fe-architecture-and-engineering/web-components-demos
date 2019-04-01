@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+      .btn{
+        height: 30px;
+        font-size: 14px;
+      }
+      #ifr{
+        display: block;
+        margin-top: 50px;
+        width: 100%;
+        height: 500px;
+      }
+      my-dialog:not(:defined){
+        display: none;
+      }
+      .dialog__title{
+        color: blue;
+        font-size: 16px;
+        background-color: black;
+        color: #ffffff;
+        height: 40px;
+        line-height: 40px;
+      }
+      .dialog__content{
+        display: flex;
+        padding: 0 20px;
+      }
+      .dialog__content-showcase{
+        width: 100px;
+      }
+      .dialog__content-img{
+        width: 100%;
+        display: block;
+      }
+      .dialog__content-author{
+        color: #999;
+        font-size: 12px;
+        text-align: justify;
+        word-break: break-word;
+      }
+      .dialog__content-desc{
+        flex: 1;
+        margin: 0;
+        padding: 0 10px;
+      }
+    </style>
+</head>
+<body>
+  <h3>My Dialog</h3>
+
+  <button class='btn' id='btn-open-dialog'>Open Dialog</button>
+  <button class='btn' id='btn-change-name'>Change Dialog Name</button>
+  <button class='btn' id='btn-remove-dialog'>Remove Dialog</button>
+  <button class='btn' id='btn-adopt-dialog'>Adopt Dialog</button>
+
+  <my-dialog id="dialog">
+    <div slot="title" class='dialog__title'>几何建筑</div>
+    <section slot="content" class="dialog__content">
+      <div class="dialog__content-showcase">
+        <img src="./1.jpg" alt="几何建筑" class="dialog__content-img"/>
+        <span class="dialog__content-author">Photo by Ricardo Gomez Angel on Unsplash</span>
+      </div>
+      <p class="dialog__content-desc">几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述</p>
+    </section>
+  </my-dialog>
+  <iframe frameborder="0" id='ifr'></iframe>
+  <template id='my-dialog-tpl'>
+    <style>
+      .my-dialog__close{
+      position: absolute;
+      top: 0;
+      right: 5px;
+      border: none;
+      font-weight: bold;
+      font-size: 24px;
+      background: none;
+      color: red;
+      padding: 0;
+      cursor: pointer;
+      outline: none;
+    }
+    .my-dialog__close:focus{
+      outline: none;
+    }
+    .my-dialog__wrapper{
+      background-color: #ffffff;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      border: solid 1px #000000;
+      border-radius: 2px;
+      overflow: hidden;
+      display: none;
+    }
+    .my-dialog__wrapper[open='true']{
+      display: block;
+    }
+    .my-dialog__head{
+      white-space: nowrap;
+      text-align: center;
+    }
+    .my-dialog__content{
+      margin: 10px 0;
+    }
+    </style>
+    <div class='my-dialog__wrapper'>
+      <div class='my-dialog__head'>
+        <button class='my-dialog__close'>&times;</button>
+        <slot name="title"></slot>
+      </div>
+      <div class='my-dialog__body'>
+        <div class='my-dialog__content'>
+          <slot name="content"></slot>
+        </div>
+      </div>
+    </div>
+  </template>
+  <script src="index.js"></script>
+  <script>
+    let $dialog = document.getElementById('dialog');
+    const $btn_open_dialog = document.getElementById('btn-open-dialog');
+    const $btn_remove_dialog = document.getElementById('btn-remove-dialog');
+    const $btn_adopt_dialog = document.getElementById('btn-adopt-dialog');
+    const $btn_change_name = document.getElementById('btn-change-name');
+
+    const $ifr = document.getElementById('ifr');
+
+    $btn_open_dialog.addEventListener('click',ev=>{
+      // if(!$dialog){
+      //   createDialog();
+      // }
+      $dialog.open = true;
+    },false);
+
+    $btn_remove_dialog.addEventListener('click',ev=>{
+      $dialog.parentNode.removeChild($dialog);
+    },false);
+
+    $btn_adopt_dialog.addEventListener('click',ev=>{
+      const $el = document.adoptNode($dialog);
+      $ifr.contentWindow.document.body.appendChild($el);
+    },false);
+    
+    $btn_change_name.addEventListener('click',ev=>{
+      $dialog.name = Math.random();
+    },false);
+
+    // function createDialog(){
+    //   $dialog = document.createElement('my-dialog');
+    //   $dialog.setAttribute('title','My Dialog Title');
+    //   $dialog.setAttribute('content','My dialog content');
+    //   $dialog.setAttribute('name',Math.random());
+    //   document.body.appendChild($dialog);
+    // }
+  </script>
+</body>
+</html>
