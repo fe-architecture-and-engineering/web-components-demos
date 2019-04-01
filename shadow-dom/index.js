@@ -1,45 +1,3 @@
-/**
- * @class CircularRing
- * @desc 自定义CircularRing元素
- */
-class CircularRing extends HTMLElement{
-  constructor(){
-    super();
-  }
-  connectedCallback() {
-    const size = this.getAttribute('radius')*2;
-    const innerColor = this.getAttribute('inner-color');
-    const borderColor = this.getAttribute('border-color');
-    const borderWidth = this.getAttribute('border-width');
-    const styles = `
-      width:${size}px;
-      height:${size}px;
-      box-sizing: border-box;
-      background-color:${innerColor};
-      border-radius:50%;
-      border:solid ${borderWidth}px ${borderColor};
-    `;
-    this.innerHTML = `<div style='${styles}'></div>`;
-  }
-}
-
-setTimeout(()=>{
-  customElements.define('circular-ring', CircularRing);
-},3000);
-
-/**
- * @class MyButton
- * @desc 扩展内置Button元素
- */
-class MyButton extends HTMLButtonElement{
-  constructor(){
-    super();
-    this.addEventListener('click', e => alert('Hello my-button'));
-  }
-}
-
-customElements.define('my-button', MyButton, { extends: 'button' });
-
 class MyDialog extends HTMLElement{
   static get observedAttributes() {
     // 监听name属性
@@ -47,16 +5,56 @@ class MyDialog extends HTMLElement{
   }
   constructor(){
     super();
+    this._style = `
+    .my-dialog__close{
+      position: absolute;
+      top: 0;
+      right: 5px;
+      border: none;
+      font-weight: bold;
+      font-size: 24px;
+      background: none;
+      color: red;
+      padding: 0;
+      cursor: pointer;
+      outline: none;
+    }
+    .my-dialog__close:focus{
+      outline: none;
+    }
+    .my-dialog__wrapper{
+      background-color: #ffffff;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      padding: 0 20px;
+      border: solid 1px #000000;
+      border-radius: 2px;
+      overflow: hidden;
+      display: none;
+    }
+    .my-dialog__wrapper[open='true']{
+      display: block;
+    }
+    .my-dialog__head{
+      white-space: nowrap;
+      text-align: center;
+    }
+    .my-dialog__content{
+      margin: 10px 0;
+    }`;
+    this._shadowRoot = this.attachShadow({mode: 'open'});
     this._close = this._close.bind(this);
   }
   get open() {
-    if(this.hasAttribute('open')){
-      return JSON.parse(this.getAttribute('open'));
+    if(this.$wrapper&&this.$wrapper.hasAttribute('open')){
+      return JSON.parse(this.$wrapper.getAttribute('open'));
     }
     return false;
   }
   set open(status) {
-    this.setAttribute('open',status);
+    this.$wrapper.setAttribute('open',status);
   }
   get name(){
     return this.getAttribute('name')||'';
@@ -71,7 +69,9 @@ class MyDialog extends HTMLElement{
     console.log('connectedCallback');
     const title = this.getAttribute('title');
     const content = this.getAttribute('content');
-    this.innerHTML = `<div class='my-dialog__wrapper'>
+    this._shadowRoot.innerHTML = `
+    <style>${this._style}</style>
+    <div class='my-dialog__wrapper' open=${this.open}>
       <div class='my-dialog__head'>
         <button class='my-dialog__close'>&times;</button>
         <h2 class='my-dialog__title'>${title}</h2>
@@ -80,7 +80,8 @@ class MyDialog extends HTMLElement{
         <div class='my-dialog__content'>${content}</div>
       </div>
     </div>`;
-    this.$closeBtn = this.querySelector('.my-dialog__close');
+    this.$wrapper = this._shadowRoot.querySelector('.my-dialog__wrapper');
+    this.$closeBtn = this._shadowRoot.querySelector('.my-dialog__close');
     // 关闭按钮添加click监听
     this.$closeBtn.addEventListener('click',this._close,false);
   }
