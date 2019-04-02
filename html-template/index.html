@@ -57,7 +57,6 @@
   <button class='btn' id='btn-open-dialog'>Open Dialog</button>
   <button class='btn' id='btn-change-name'>Change Dialog Name</button>
   <button class='btn' id='btn-remove-dialog'>Remove Dialog</button>
-  <button class='btn' id='btn-adopt-dialog'>Adopt Dialog</button>
 
   <my-dialog id="dialog">
     <div slot="title" class='dialog__title'>几何建筑</div>
@@ -69,7 +68,6 @@
       <p class="dialog__content-desc">几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述几何建筑描述</p>
     </section>
   </my-dialog>
-  <iframe frameborder="0" id='ifr'></iframe>
   <template id='my-dialog-tpl'>
     <style>
       .my-dialog__close{
@@ -124,18 +122,14 @@
   </template>
   <script src="index.js"></script>
   <script>
-    let $dialog = document.getElementById('dialog');
+    const $dialog = document.getElementById('dialog');
     const $btn_open_dialog = document.getElementById('btn-open-dialog');
     const $btn_remove_dialog = document.getElementById('btn-remove-dialog');
-    const $btn_adopt_dialog = document.getElementById('btn-adopt-dialog');
     const $btn_change_name = document.getElementById('btn-change-name');
 
     const $ifr = document.getElementById('ifr');
 
     $btn_open_dialog.addEventListener('click',ev=>{
-      // if(!$dialog){
-      //   createDialog();
-      // }
       $dialog.open = true;
     },false);
 
@@ -143,22 +137,9 @@
       $dialog.parentNode.removeChild($dialog);
     },false);
 
-    $btn_adopt_dialog.addEventListener('click',ev=>{
-      const $el = document.adoptNode($dialog);
-      $ifr.contentWindow.document.body.appendChild($el);
-    },false);
-    
     $btn_change_name.addEventListener('click',ev=>{
       $dialog.name = Math.random();
     },false);
-
-    // function createDialog(){
-    //   $dialog = document.createElement('my-dialog');
-    //   $dialog.setAttribute('title','My Dialog Title');
-    //   $dialog.setAttribute('content','My dialog content');
-    //   $dialog.setAttribute('name',Math.random());
-    //   document.body.appendChild($dialog);
-    // }
   </script>
 </body>
 </html>
